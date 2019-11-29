@@ -1,5 +1,17 @@
 <?php
     session_start();
+    if ( isset($_SESSION["status"])) {
+        if ( $_SESSION["status"] == "Administrator" ) {
+            header("Location: pages_admin.php");
+            exit;
+        } else {
+            header("Location: pages_member.php");
+            exit;
+        }
+    }
+
+
+
     error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
     mysql_connect('localhost','root','');
     mysql_select_db('informatika');
@@ -16,12 +28,25 @@
             //berhasil login
             $_SESSION['username']=$row['username'];
             $_SESSION['status']=$row['status'];
+            
+            if($row['status'] == 'Administrator'){
+            echo"    
+                <script>
+                    alert('Anda berhasil login sebagai $row[status].');
+                    document.location.href='pages_admin.php';
+                </script>";
+                exit;
+            }elseif( $row["status"] == "Member" ){
+            echo"
+                <script>
+                    alert('Anda berhasil login sebagai $row[status].');
+                    document.location.href='pages_member.php';
+                </script>";
+                exit;
+            }
 ?>
 
-<script language script="JavaScript">
-    alert('Anda login sebagai <?php echo $row['username'];?>');
-        document.location='hasillogin.php';
-</script>
+
 
 <?php
     }else{
